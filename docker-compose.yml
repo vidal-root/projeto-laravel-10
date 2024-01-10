@@ -2,6 +2,8 @@ version: "3.7"
 
 services:
     sistema_gestao:
+        container_name: sistema-gestao-laravel
+        platform: linux/amd64
         build:
             context: .
             dockerfile: Dockerfile
@@ -25,14 +27,12 @@ services:
             - sistema-getao-network
      # db mysql ${DB_DATABASE} //Busca do arquivo .env
     mysql:
+        platform: linux/arm64
         container_name: banco-mysql
-        image: mysql:5.7.22
+        image: mysql:8.0
         restart: unless-stopped
         environment:
-            MYSQL_DATABASE: ${DB_DATABASE}
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-            MYSQL_PASSWORD: ${DB_PASSWORD}
-            MYSQL_USER: ${DB_USERNAME}
         volumes:
             - ./.docker/mysql/dbdata:/var/lib/mysql
         ports:
@@ -41,6 +41,7 @@ services:
             - sistema-getao-network
 
     phpmyadmin:
+        platform: linux/amd64
         image: phpmyadmin/phpmyadmin
         container_name: phpmyadmin
         links:
@@ -49,7 +50,7 @@ services:
         environment:
             - PMA_ARBITRARY=1
         ports:
-            - 8899:80
+            - 8899:8084
         networks:
             - sistema-getao-network
 
